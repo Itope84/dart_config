@@ -6,13 +6,17 @@ import 'package:yaml/yaml.dart' as YAML;
 import '../config.dart';
 
 class YamlConfigParser implements ConfigParser {
-  
-  Future<Map> parse(String configText) {
-    var completer = new Completer<Map>();
-    
+
+  @override
+  Map<String, dynamic> parse(String configText) {
     var map = YAML.loadYaml(configText);
-    completer.complete(map);
-    
-    return completer.future;
+    print('YMAL result is ${map.runtimeType}');
+    if(map is Map<String, dynamic>) {
+      print('YMAL result is a Map');
+      return map;
+    } else {
+      print('YMAL result NOT is a Map');
+      return {};
+    }
   }
 }

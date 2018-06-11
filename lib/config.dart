@@ -19,7 +19,7 @@ class Config  {
   final String _configPathOrUrl;
   
   // [configValues is only populated once [readConfig]'s future is completed
-  var configValues;
+  Map<String,dynamic> configValues;
   
   /**
    * 
@@ -35,22 +35,11 @@ class Config  {
    * Returns a [Future<Map>] containing key/value pairs
    * 
    */
-  Future<Map> readConfig() {
-    var completer = new Completer<Map>();
-    
-    // load, then parse, then complete
-    _configLoader.loadConfig(_configPathOrUrl).then(
-        (configText) {
-          _configParser.parse(configText).then(
-              (Map config) {
-                configValues = config;
-                completer.complete(config);
-              },
-              onError: (err) => completer.completeError(err));
-        }, 
-        onError: (err) => completer.completeError(err));
-    
-    return completer.future;
+  Future<Map<String, dynamic>> readConfig() async {
+    // load, then parse
+    String configText = await _configLoader.loadConfig(_configPathOrUrl);
+    configValues = _configParser.parse(configText);
+    return configValues;
   }
   
 }
@@ -66,7 +55,7 @@ abstract class ConfigLoader {
    * A config loader will load the config data from the [pathOrUrl], and
    * return the contents of the file as a `Future<String>`
    */
-  Future<String> loadConfig(pathOrUrl);
+  Future<String> loadConfig(String pathOrUrl);
 
 }
 
@@ -81,5 +70,5 @@ abstract class ConfigParser {
   /**
    * Returns a Config object from the parsed config file.
    */
-  Future<Map<String,Object>> parse(String configText);
+  Map<String,dynamic> parse(String configText);
 }

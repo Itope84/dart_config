@@ -13,16 +13,13 @@
  */
 library config_tests;
 
-import "package:unittest/unittest.dart";
+import 'package:dart_config/config.dart';
 import 'package:dart_config/parsers/config_parser_json.dart';
 import 'package:dart_config/parsers/config_parser_yaml.dart';
-import 'package:dart_config/config.dart';
+import "package:unittest/unittest.dart";
 
-
-final pathMap = new Map<String,String>();
-var loaderImpl;
-
-
+final pathMap = new Map<String, String>();
+ConfigLoader loaderImpl;
 
 // A list of keys that should be in the pathMap
 final SIMPLE_CONFIG_JSON = "SIMPLE_CONFIG_JSON";
@@ -39,60 +36,52 @@ void runTests() {
 void _jsonTests() {
   group("json:", () {
     test("simple key value", () {
-      var config = new Config(pathMap[SIMPLE_CONFIG_JSON],
-          loaderImpl,
-          new JsonConfigParser());
-
+      var config = new Config(
+          pathMap[SIMPLE_CONFIG_JSON], loaderImpl, new JsonConfigParser());
 
       var future = config.readConfig();
-      expect(future, completion(containsPair("key","value")));
+      expect(future, completion(containsPair("key", "value")));
     });
 
-
     test("nested keys and values", () {
-      var config = new Config(pathMap[NESTED_CONFIG_JSON],
-          loaderImpl,
-          new JsonConfigParser());
+      var config = new Config(
+          pathMap[NESTED_CONFIG_JSON], loaderImpl, new JsonConfigParser());
 
-      var expectedMap = {"key": {"key2":"value"}};
+      var expectedMap = {
+        "key": {"key2": "value"}
+      };
       var mapMatcher = new MapMatcher(expectedMap);
-
 
       var future = config.readConfig();
       expect(future, completion(mapMatcher));
     });
   });
 }
-
 
 void _yamlTests() {
   group("yaml:", () {
     test("simple key value", () {
-      var config = new Config(pathMap[SIMPLE_CONFIG_YAML],
-          loaderImpl,
-          new YamlConfigParser());
+      var config = new Config(
+          pathMap[SIMPLE_CONFIG_YAML], loaderImpl, new YamlConfigParser());
 
       var future = config.readConfig();
-      expect(future, completion(containsPair("key","value")));
+      expect(future, completion(containsPair("key", "value")));
     });
 
     test("nested keys and values", () {
-      var config = new Config(pathMap[NESTED_CONFIG_YAML],
-          loaderImpl,
-          new YamlConfigParser());
+      var config = new Config(
+          pathMap[NESTED_CONFIG_YAML], loaderImpl, new YamlConfigParser());
 
-      var expectedMap = {"key": {"key2":"value"}};
+      var expectedMap = {
+        "key": {"key2": "value"}
+      };
       var mapMatcher = new MapMatcher(expectedMap);
-
 
       var future = config.readConfig();
       expect(future, completion(mapMatcher));
     });
   });
 }
-
-
-
 
 /*
  * Recursively compares two maps, using brute-force,
@@ -101,17 +90,15 @@ void _yamlTests() {
 class MapMatcher implements Matcher {
   var _map;
 
-
   MapMatcher(this._map);
 
   // JSON parse the item back into a map, and compare the two maps
   // (brute force, innefficient)
-  bool matches(Map item, MatchState matchState) {
+  bool matches(dynamic item, Map matchState) {
     var result = true;
 
     // try and compare the item and the map
     return _mapsAreEqual(item, _map);
-
   }
 
   Description describe(Description description) {
@@ -119,11 +106,10 @@ class MapMatcher implements Matcher {
     return description;
   }
 
-  Description describeMismatch(item, Description mismatchDescription,
-                               MatchState matchState, bool verbose) {
+  Description describeMismatch(
+      item, Description mismatchDescription, Map matchState, bool verbose) {
     mismatchDescription.add("item: ${item.toString()}");
     return mismatchDescription;
-
   }
 
   bool _listsAreEqual(List one, List two) {
@@ -138,40 +124,33 @@ class MapMatcher implements Matcher {
   bool _mapsAreEqual(Map one, Map two) {
     var result = true;
 
-    one.forEach((k,v) {
+    one.forEach((k, v) {
       if (two[k] != v) {
-
         if (v is List) {
           if (!_listsAreEqual(one[k], v)) {
             result = false;
           }
-        }
-        else if (v is Map) {
+        } else if (v is Map) {
           if (!_mapsAreEqual(one[k], v)) {
             result = false;
           }
-        }
-        else {
+        } else {
           result = false;
         }
-
       }
     });
 
-    two.forEach((k,v) {
+    two.forEach((k, v) {
       if (one[k] != v) {
-
         if (v is List) {
           if (!_listsAreEqual(two[k], v)) {
             result = false;
           }
-        }
-        else if (v is Map) {
+        } else if (v is Map) {
           if (!_mapsAreEqual(two[k], v)) {
             result = false;
           }
-        }
-        else {
+        } else {
           result = false;
         }
       }

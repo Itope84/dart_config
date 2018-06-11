@@ -1,18 +1,21 @@
 library config_parser_json;
 
 import 'dart:async';
-import 'dart:json' as JSON;
+import 'dart:convert';
 
 import '../config.dart';
 
 class JsonConfigParser implements ConfigParser {
-  
-  Future<Map> parse(String configText) {
-    var completer = new Completer<Map>();
-    
-    var map = JSON.parse(configText);
-    completer.complete(map);
-    
-    return completer.future;
+
+  @override
+  Map<String, dynamic> parse(String configText) {
+    var map = json.decode(configText);
+    if (map is Map<String, dynamic>) {
+      print('JSON was a map');
+      return map;
+    } else {
+      print('JSON was NOT a map');
+      return {};
+    }
   }
 }
