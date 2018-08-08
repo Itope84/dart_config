@@ -7,4 +7,4 @@ dependencies:
   unittest: any
   yaml: '>=0.4.2'
 dev_dependencies:
-  browser: any
+#  browser: any

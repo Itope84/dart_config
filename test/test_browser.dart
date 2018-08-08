@@ -1,12 +1,8 @@
 library test_browser;
 
-import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
 
 import 'package:dart_config/loaders/config_loader_httprequest.dart';
-import 'package:dart_config/parsers/config_parser_json.dart';
-import 'package:dart_config/parsers/config_parser_yaml.dart';
-import 'package:dart_config/config.dart';
 
 import 'tests.dart' as tests;
 

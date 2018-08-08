@@ -2,7 +2,6 @@ library config_filesystem_test;
 
 import 'package:dart_config/loaders/config_loader_filesystem.dart';
 
-import 'package:unittest/unittest.dart';
 import 'tests.dart' as tests;
 
 main() {

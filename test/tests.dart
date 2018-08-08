@@ -95,8 +95,6 @@ class MapMatcher implements Matcher {
   // JSON parse the item back into a map, and compare the two maps
   // (brute force, innefficient)
   bool matches(dynamic item, Map matchState) {
-    var result = true;
-
     // try and compare the item and the map
     return _mapsAreEqual(item, _map);
   }
