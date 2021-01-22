@@ -10,6 +10,6 @@ class ConfigFilesystemLoader extends ConfigLoader {
    * A config loader will load
    */
   Future<String> loadConfig(String path) async {
-    return new File('test/$path').readAsStringSync();
+    return new File('$path').readAsStringSync();
   }
 }
