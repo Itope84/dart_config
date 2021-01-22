@@ -5,10 +5,9 @@ import 'dart:async';
 import 'loaders/config_loader_httprequest.dart';
 import 'parsers/config_parser_yaml.dart';
 
-Future<Map> loadConfig([String filename="config.yaml"]) {
-  var config = new Config(filename,
-      new ConfigHttpRequestLoader(),
+Future<Map> loadConfig([String filename = "config.yaml"]) {
+  var config = new Config(filename, (new ConfigHttpRequestLoader()).loadConfig,
       new YamlConfigParser());
-  
+
   return config.readConfig();
 }

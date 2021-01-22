@@ -13,21 +13,22 @@ import 'dart:async';
  * Then call [readConfig] to load and parse the config.
  * 
  */
-class Config  {
-  final ConfigLoader _configLoader;
+class Config {
+  final Future<String> Function(String) _configLoader;
   final ConfigParser _configParser;
   final String _configPathOrUrl;
-  
+
   // [configValues is only populated once [readConfig]'s future is completed
-  Map<String,dynamic> configValues;
-  
+  Map<String, dynamic> configValues;
+
   /**
    * 
    */
-  Config(String this._configPathOrUrl,
-      ConfigLoader this._configLoader, 
+  Config(
+      String this._configPathOrUrl,
+      Future<String> Function(String) this._configLoader,
       ConfigParser this._configParser);
-  
+
   /**
    * Loads the config using the [ConfigLoader] and 
    * parses the file using the [ConfigParser]
@@ -37,11 +38,10 @@ class Config  {
    */
   Future<Map<String, dynamic>> readConfig() async {
     // load, then parse
-    String configText = await _configLoader.loadConfig(_configPathOrUrl);
+    String configText = await _configLoader(_configPathOrUrl);
     configValues = _configParser.parse(configText);
     return configValues;
   }
-  
 }
 
 /**
@@ -50,13 +50,11 @@ class Config  {
  * (in client side Dart) are just two possible locations.
  */
 abstract class ConfigLoader {
-  
   /**
    * A config loader will load the config data from the [pathOrUrl], and
    * return the contents of the file as a `Future<String>`
    */
   Future<String> loadConfig(String pathOrUrl);
-
 }
 
 /**
@@ -66,9 +64,8 @@ abstract class ConfigLoader {
  * `int`, `num`, `double`, `String`, `bool`, `null`.
  */
 abstract class ConfigParser {
-  
   /**
    * Returns a Config object from the parsed config file.
    */
-  Map<String,dynamic> parse(String configText);
+  Map<String, dynamic> parse(String configText);
 }
